@@ -9,7 +9,7 @@ Currently includes:
 - [dump1090-fa](https://github.com/flightaware/dump1090)
 - [piaware](https://github.com/flightaware/piaware)
 - [fr24feed](https://www.flightradar24.com/share-your-data)
-- [realadsb](https://github.com/flightaware/piaware)
+- [realadsb](https://www.realadsb.com/)
 - [gpsd](https://gpsd.gitlab.io/gpsd/)
 - [lighttpd](https://www.lighttpd.net/)
 
