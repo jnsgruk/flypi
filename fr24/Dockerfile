@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:buster-slim AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -8,18 +8,21 @@ ENV FR24_VERSION 1.0.25-3
 WORKDIR /tmp 
 RUN apt-get update && \
   # Download some utilities
-  apt-get install -y wget ca-certificates tar && \
+  apt-get install -y --no-install-recommends wget ca-certificates tar && \
   # Get the FR24 binaries
-  wget -qO fr24feed.tgz https://repo-feed.flightradar24.com/rpi_binaries/fr24feed_1.0.25-3_armhf.tgz && \
+  wget -qO fr24feed.tgz "https://repo-feed.flightradar24.com/rpi_binaries/fr24feed_${FR24_VERSION}_armhf.tgz" && \
   # Extract the archive
-  tar xvzf fr24feed.tgz
+  tar xvzf fr24feed.tgz && \
+  # Clean up apt lists
+  apt-get clean &&  \
+  rm -rf /var/lib/apt/lists/*
 
 # Start new container
 FROM debian:buster-slim
 
 # Copy across the fr24feed binary and SSL certificates
-COPY --from=0 /tmp/fr24feed_armhf/fr24feed /usr/bin/fr24feed
-COPY --from=0 /etc/ssl /etc/ssl
+COPY --from=build /tmp/fr24feed_armhf/fr24feed /usr/bin/fr24feed
+COPY --from=build /etc/ssl /etc/ssl
 # Copy the custom config file and entrypoint
 COPY fr24feed.ini /home/fr24/fr24feed.ini
 COPY entrypoint.sh /home/fr24/entrypoint.sh
@@ -32,4 +35,4 @@ USER fr24
 WORKDIR /home/fr24
 
 # Set the entrypoint for the container
-ENTRYPOINT [ "/bin//bash", "/home/fr24/entrypoint.sh" ]
+ENTRYPOINT [ "/bin/bash", "/home/fr24/entrypoint.sh" ]

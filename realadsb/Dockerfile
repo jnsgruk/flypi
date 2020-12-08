@@ -9,11 +9,14 @@ WORKDIR /home/realadsb
 RUN mkdir -p /usr/share/man/man1 && \
   # Install some dependencies	  
   apt-get update && \
-  apt-get install -y wget default-jre-headless && \
+  apt-get install -y --no-install-recommends wget default-jre-headless && \
   # Add a user
   useradd -s /bin/bash realadsb && \
   # Get the RealADSB Java application
-  wget -q http://www.realadsb.com/dl/adsb_hub_331.jar
+  wget -q http://www.realadsb.com/dl/adsb_hub_331.jar && \
+  # Clean up apt lists
+  apt-get clean &&  \
+  rm -rf /var/lib/apt/lists/*
 
 # Copy the entrypoint into the container
 COPY entrypoint.sh /home/realadsb/entrypoint.sh

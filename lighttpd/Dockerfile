@@ -4,7 +4,7 @@ FROM alpine:3.12 as build
 RUN apk add --no-cache git && \
   # Checkout the dump1090 code
   git clone --depth 1 -b v4.0 https://github.com/flightaware/dump1090.git /tmp/dump1090 && \
-  cd /tmp/dump1090
+  cd /tmp/dump1090 || exit
 
 FROM alpine:3.12
 
