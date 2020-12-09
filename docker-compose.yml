@@ -68,5 +68,17 @@ services:
     container_name: realadsb
     restart: unless-stopped
 
+  planefinder:
+    build:
+      context: ./planefinder
+      dockerfile: Dockerfile
+    image: jnsgruk/planefinder:latest
+    env_file:
+      - config.env
+    container_name: planefinder
+    ports:
+      - 30053:30053
+    restart: unless-stopped
+
 volumes:
   dump1090-volume:

@@ -10,6 +10,7 @@ Currently includes:
 - [piaware](https://github.com/flightaware/piaware)
 - [fr24feed](https://www.flightradar24.com/share-your-data)
 - [realadsb](https://www.realadsb.com/)
+- [planefinder](https://planefinder.net/sharing/client)
 - [gpsd](https://gpsd.gitlab.io/gpsd/)
 - [lighttpd](https://www.lighttpd.net/)
 
@@ -60,6 +61,14 @@ vim config.env
 # Build and run the containers
 sudo docker-compose up -d
 ```
+
+## Browsable Endpoints
+
+By default, the following endpoints/ports are exposed:
+
+- Piaware: http://<pi_hostname>:8080
+- Flightradar24: http://<pi_hostname>:8754
+- Planefinder: http://<pi_hostname>:30053
 
 ## Contributing/TODO
 
