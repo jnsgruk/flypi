@@ -27,4 +27,4 @@ cat <<-EOF > /home/realadsb/config.json
 }
 EOF
 
-/usr/bin/java -jar /home/realadsb/adsb_hub_331.jar /home/realadsb/config.json
+/usr/bin/java -jar /home/realadsb/adsb_hub3.jar /home/realadsb/config.json
