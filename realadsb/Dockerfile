@@ -13,7 +13,7 @@ RUN mkdir -p /usr/share/man/man1 && \
   # Add a user
   useradd -s /bin/bash realadsb && \
   # Get the RealADSB Java application
-  wget -q http://www.realadsb.com/dl/adsb_hub3.jar && \
+  wget -qO realadsb.jar http://www.realadsb.com/dl/adsb_hub3.jar && \
   # Clean up apt lists
   apt-get clean &&  \
   rm -rf /var/lib/apt/lists/*

@@ -7,7 +7,7 @@ WORKDIR /tmp
 RUN apt-get update && \
   apt-get install -y --no-install-recommends wget tar && \
   # Download planefinder client
-  wget -qO /tmp/planefinder.tar.gz http://client.planefinder.net/pfclient_4.1.1_armhf.tar.gz && \
+  wget -qO /tmp/planefinder.tar.gz http://client.planefinder.net/pfclient_5.0.161_armhf.tar.gz && \
   tar xvzf /tmp/planefinder.tar.gz
 
 FROM debian:buster-slim
