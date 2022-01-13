@@ -4,7 +4,7 @@ FROM alpine:3.12
 RUN apk add --no-cache libusb ncurses git build-base libusb-dev ncurses-dev \
         tcl-dev tcl tclx tcl-tls autoconf net-tools iproute2 && \
         # Clone the tcllauncher project
-        git clone --depth 1 -b v1.8 https://github.com/flightaware/tcllauncher /tmp/tcllauncher && \
+        git clone --depth 1 -b v1.10 https://github.com/flightaware/tcllauncher /tmp/tcllauncher && \
         cd /tmp/tcllauncher && \
         # Configure, build and install
         autoconf -f && \
@@ -12,21 +12,21 @@ RUN apk add --no-cache libusb ncurses git build-base libusb-dev ncurses-dev \
         make && \
         make install && \
         # Get the tcllib repository to make tcllauncher work properly
-        git clone --depth 1 -b tcllib_1_18 https://github.com/tcltk/tcllib /tmp/tcllib && \
+        git clone --depth 1 -b tcllib-1-20 https://github.com/tcltk/tcllib /tmp/tcllib && \
         cd /tmp/tcllib && \
         # Configure, build and install tcllib
         autoconf && \
         ./configure && \
         make && make install && \
         # Get the Piaware Code
-        git clone --depth 1 -b v4.0 https://github.com/flightaware/piaware.git /tmp/piaware && \
+        git clone --depth 1 -b v7.1 https://github.com/flightaware/piaware.git /tmp/piaware && \
         cd /tmp/piaware && \
 	# Patch Piaware source code so it doesn't rely upon localhost for gpsd
 	sed -i 's/"localhost"/"gpsd"/g' package/fa_gps.tcl && \
         # Build and install Piaware
         make install && \
         # Get the dump1090 repository
-        git clone --depth 1 -b v4.0 https://github.com/flightaware/dump1090.git /tmp/dump1090 && \
+        git clone --depth 1 -b v7.1 https://github.com/flightaware/dump1090.git /tmp/dump1090 && \
         cd /tmp/dump1090 && \
         # Build faup1090, ingore radio support as its handled by another container
         make faup1090 BLADERF=no RTLSDR=no LIMESDR=no HACKRF=no && \

@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Set the FlightRadar24 version to fetch
 # WARNING: The 1.0.26 builds seem to have issues on Rpi
-ENV FR24_VERSION 1.0.25-3
+ENV FR24_VERSION 1.0.29-6
 WORKDIR /tmp 
 RUN apt-get update && \
   # Download some utilities

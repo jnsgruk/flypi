@@ -2,16 +2,16 @@ FROM alpine:3.12 AS build
 
 RUN apk add --no-cache libusb ncurses git build-base libusb-dev ncurses-dev librtlsdr librtlsdr-dev && \
   # Get the dump1090 repository
-  git clone --depth 1 -b v4.0 https://github.com/flightaware/dump1090.git /tmp/dump1090 && \
+  git clone --depth 1 -b v7.1 https://github.com/flightaware/dump1090.git /tmp/dump1090 && \
   cd /tmp/dump1090 && \
   # Build dump1090 and install
-  make dump1090 DUMP1090_VERSION=v4.0 BLADERF=no RTLSDR=yes LIMESDR=no HACKRF=no && \
+  make dump1090 DUMP1090_VERSION=v7.1 BLADERF=no RTLSDR=yes LIMESDR=no HACKRF=no && \
   install -m 0755 -D dump1090 /usr/bin/dump1090-fa && \
   # Build view1090 and install
-  make view1090 DUMP1090_VERSION=v4.0  BLADERF=no RTLSDR=yes LIMESDR=no HACKRF=no && \
+  make view1090 DUMP1090_VERSION=v7.1  BLADERF=no RTLSDR=yes LIMESDR=no HACKRF=no && \
   install -m 0755 -D view1090 /usr/bin/view1090 && \
   # Build faup1090 and install
-  make faup1090 DUMP1090_VERSION=v4.0  BLADERF=no RTLSDR=yes LIMESDR=no HACKRF=no && \
+  make faup1090 DUMP1090_VERSION=v7.1  BLADERF=no RTLSDR=yes LIMESDR=no HACKRF=no && \
   install -m 0755 -D faup1090 /usr/bin/faup1090 && \
   # Install the start script and default config
   install -m 0755 -D debian/start-dump1090-fa /usr/share/dump1090-fa/start-dump1090-fa && \
