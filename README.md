@@ -1,6 +1,6 @@
 # FlyPi
 
-A collection of tools for tracking planes/helicopters/UFOs/whatever with ADS-B. Packaged in [OCI](https://opencontainers.org/)-compliant containers and orchestrated with [`docker-compose`](https://docs.docker.com/compose/).
+A collection of tools for tracking planes/helicopters/UFOs/whatever with ADS-B. Packaged for NixOS.
 
 ## Contents
 
@@ -11,12 +11,9 @@ Currently includes:
 - [fr24feed](https://www.flightradar24.com/share-your-data)
 - [realadsb](https://www.realadsb.com/)
 - [planefinder](https://planefinder.net/sharing/client)
-- [gpsd](https://gpsd.gitlab.io/gpsd/)
-- [lighttpd](https://www.lighttpd.net/)
 
 ## Implementation Notes
 
-- **piaware**: patched at build time to find the `gpsd` container
 - **dump1090**: built with support for rtl-sdr dongles only
 - **lighttpd**: usually packaged with `dump1090`, in this implementation it runs in a separate container so it can be disabled if requred.
 - **gpsd**: attaches to a USB GPS receiver at `/dev/ttyUSB0`.
