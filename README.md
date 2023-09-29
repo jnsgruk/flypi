@@ -12,65 +12,82 @@ Currently includes:
 - [realadsb](https://www.realadsb.com/)
 - [planefinder](https://planefinder.net/sharing/client)
 
-## Implementation Notes
+## Usage
 
-- **dump1090**: built with support for rtl-sdr dongles only
-- **lighttpd**: usually packaged with `dump1090`, in this implementation it runs in a separate container so it can be disabled if requred.
-- **gpsd**: attaches to a USB GPS receiver at `/dev/ttyUSB0`.
-- **realadsb**: preconfigured to read from dump1090 and output to a LaMetric clock. This is configurable by editing the [`entrypoint.sh`](./realadsb/entrypoint.sh) for the container
+First you must add this flake to your flake's inputs
 
-## Raspberry Pi Initial Setup
+```nix
+inputs = {
+    # ...
+    flypi.url = "github:jnsgruk/flypi";
+}
+```
 
-These steps have been tested on Raspbian Buster, using a [NooElec NESDR Mini2+](https://www.nooelec.com/store/nesdr-mini-2-plus.html) dongle and a [Globalsat BU-353-S4 USB GPS](https://www.globalsat.com.tw/en/product-199952/Cable-GPS-with-USB-interface-SiRF-Star-IV-BU-353S4.html) receiver.
+Ensure that you configure your system to use the included pkgs overlay:
 
-```bash
-# Install Git, and Docker/docker-compose from official repo
-curl -sSL https://get.docker.com | sudo sh
-sudo apt update
-sudo apt install -y docker-compose git
+```nix
+nixpkgs = {
+    overlays = [ inputs.flypi.overlay ]
+};
+```
 
-# Blacklist the rtl drivers on the host
-cat <<-EOF | sudo tee /etc/modprobe.d/rtlsdr-blacklist.conf
-blacklist rtl2832
-blacklist r820t
-blacklist rtl2830
-blacklist dvb_usb_rtl28xxu
-EOF
+Next, configure your system using the included modules:
 
-# Install the udev rules so the correct permissions are applied to the RTL-SDR device
-cat <<-EOF | sudo tee /etc/udev/rules.d/rtl-sdr.rules
-SUBSYSTEMS=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="2838", ENV{ID_SOFTWARE_RADIO}="1", MODE:="0660", GROUP:="plugdev"
-EOF
+```nix
+{ inputs, ...}: {
+  imports = [
+    inputs.flypi.nixosModules.dump1090
+    inputs.flypi.nixosModules.fr24
+    inputs.flypi.nixosModules.piaware
+    inputs.flypi.nixosModules.planefinder
+  ];
 
-# Reload the udev rules
-sudo udevadm control --reload-rules
-
-# Clone the repo
-git clone https://github.com/jnsgruk/flypi
-cd flypi
-
-# Setup an env file with your feeder id/fr24 key
-cp config.env.example config.env
-
-# Edit the example config file to include your account details
-vim config.env
-
-# Build and run the containers
-sudo docker-compose up -d
+  services = {
+    dump1090 = {
+      enable = true;
+      ui.enable = true;
+    };
+    fr24 = {
+      enable = true;
+      sharingKey = "deadbeef";
+    };
+    piaware = {
+      enable = true;
+      feederId = "deadbeef";
+    };
+    planefinder = {
+      enable = true;
+      shareCode = "deadbeef";
+      latitude = "52.352";
+      longitude = "-1.621";
+    };
+    realadsb = {
+        enable = true;
+        settings = {
+            input = [{
+                type = "beast_tcp";
+                name = "dump1090";
+                host = "localhost";
+                port = 30005;
+            }];
+            output = [{
+                type = "lametric";
+                name = "lametric";
+                host = "192.168.1.23";
+                token = "deadbeef";
+                latitude = "52.352";
+                longitude = "-1.621";
+            }];
+        };
+    };
+  };
+};
 ```
 
 ## Browsable Endpoints
 
 By default, the following endpoints/ports are exposed:
 
-- Piaware: http://<pi_hostname>:8080
-- Flightradar24: http://<pi_hostname>:8754
-- Planefinder: http://<pi_hostname>:30053
-
-## Contributing/TODO
-
-Pull requests welcome, most of the heavy lifting is done in the `Dockerfile`s and `entrypoint.sh` scripts, which are all heavily commented.
-
-Some notes on possible improvements:
-
-- Add support for HackRF, LimeSDR, BladeRF when building `dump1090-fa`
+- Piaware: http://<hostname>:8080
+- Flightradar24: http://<hostname>:8754
+- Planefinder: http://<hostname>:30053
