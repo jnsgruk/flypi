@@ -40,6 +40,7 @@ Next, configure your system using the included modules:
     inputs.flypi.nixosModules.fr24
     inputs.flypi.nixosModules.piaware
     inputs.flypi.nixosModules.planefinder
+    inputs.flypi.nixosModules.realadsb
   ];
 
   services = {
