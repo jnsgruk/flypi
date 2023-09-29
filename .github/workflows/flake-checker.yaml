@@ -1,0 +1,25 @@
+name: Flake checker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  flake-checker:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout flake
+        uses: actions/checkout@v3
+
+      - name: Install nix
+        uses: DeterminateSystems/nix-installer-action@v4
+
+      - name: Setup magic-nix-cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Check flake inputs
+        uses: DeterminateSystems/flake-checker-action@v5
