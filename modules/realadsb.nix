@@ -34,10 +34,9 @@ in
         Type = "simple";
         DynamicUser = true;
         Restart = "on-failure";
-        LogsDirectory = "realadsb";
         ExecStart = "${lib.getExe cfg.package} ${configFile cfg}";
-        StandardOutput = file:/var/log/realadsb.log;
-        StandardError = file:/var/log/realadsb.log;
+        StandardOutput = append:/var/log/realadsb.log;
+        StandardError = "inherit";
       };
     };
   };

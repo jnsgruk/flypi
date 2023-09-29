@@ -55,10 +55,9 @@ in
         DynamicUser = true;
         StateDirectory = "fr24feed";
         Restart = "on-failure";
-        LogsDirectory = "fr24";
         ExecStart = "${lib.getExe cfg.package} --config-file=${mkConfigFile cfg}";
-        StandardOutput = file:/var/log/fr24.log;
-        StandardError = file:/var/log/fr24.log;
+        StandardOutput = append:/var/log/fr24.log;
+        StandardError = "inherit";
       };
     };
   };
