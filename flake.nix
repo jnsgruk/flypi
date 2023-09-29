@@ -72,8 +72,8 @@
         dump1090 = import ./modules/dump1090.nix;
         fr24 = import ./modules/fr24.nix;
         piaware = import ./modules/piaware.nix;
-        planefinder = ./modules/planefinder.nix;
-        realadsb = { };
+        planefinder = import ./modules/planefinder.nix;
+        realadsb = import ./modules/realadsb.nix;
       };
 
       formatter = forAllSystems (system:
