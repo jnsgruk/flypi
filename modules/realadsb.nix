@@ -15,7 +15,7 @@ in
       package = lib.mkPackageOptionMD pkgs "realadsb" { };
 
       settings = {
-        input = types.listOf ({
+        input = types.listOf {
           type = lib.mkOption {
             type = lib.types.enum [ "beast_tcp" ];
             default = "beast_tcp";
@@ -36,9 +36,9 @@ in
             default = 30005;
             description = lib.mdDoc "The port serving the input source.";
           };
-        });
+        };
 
-        output = types.listOf ({
+        output = types.listOf {
           type = lib.mkOption {
             type = lib.types.enum [ "lametric" ];
             default = "lametric";
@@ -69,7 +69,7 @@ in
             default = "0.0";
             description = lib.mdDoc "Longitude of reciever";
           };
-        });
+        };
       };
     };
 
