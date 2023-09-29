@@ -1,0 +1,173 @@
+diff --git a/package/fa_sysinfo.tcl b/package/fa_sysinfo.tcl
+index 8cb06bf..ae5e14e 100644
+--- a/package/fa_sysinfo.tcl
++++ b/package/fa_sysinfo.tcl
+@@ -6,7 +6,7 @@ namespace eval ::fa_sysinfo {
+ 	# filesystem_usage - return a list of mountpoint / percentage-used pairs
+ 	proc filesystem_usage {} {
+ 		set result [list]
+-		set fp [::fa_sudo::open_as "|/bin/df --output=target,pcent"]
++		set fp [::fa_sudo::open_as "|df --output=target,pcent"]
+ 		try {
+ 			gets $fp ;# skip header line
+ 			while {[gets $fp line] >= 0} {
+@@ -141,7 +141,7 @@ namespace eval ::fa_sysinfo {
+ 		# and everything else, in that order. If there's still a tie,
+ 		# use the interface name as a tiebreaker.
+ 
+-		if {[catch {set fp [::fa_sudo::open_as "|/sbin/ip -o link show"]} catchResult] == 1} {
++		if {[catch {set fp [::fa_sudo::open_as "|ip -o link show"]} catchResult] == 1} {
+ 			puts stderr "ip command not found on this version of Linux, you may need to install the iproute2 package and try again"
+ 			return ""
+ 		}
+diff --git a/package/helpers/restart-network b/package/helpers/restart-network
+index cf476e8..7ee0ae6 100755
+--- a/package/helpers/restart-network
++++ b/package/helpers/restart-network
+@@ -1,20 +1,20 @@
+ status=0
+ 
+ if [ -f /etc/init.d/ifplugd ]; then
+-	/bin/systemctl --quiet stop ifplugd || status=1
++	systemctl --quiet stop ifplugd || status=1
+ fi
+ 
+-/bin/systemctl --quiet stop networking || status=1
+-/bin/systemctl --quiet restart set-rfkill || status=1
+-/bin/systemctl --quiet restart generate-network-config || status=1
+-/bin/systemctl --quiet daemon-reload || status=1
+-/bin/systemctl --quiet restart dhcpcd || status=1
+-/bin/systemctl --quiet restart rsyslog || status=1
++systemctl --quiet stop networking || status=1
++systemctl --quiet restart set-rfkill || status=1
++systemctl --quiet restart generate-network-config || status=1
++systemctl --quiet daemon-reload || status=1
++systemctl --quiet restart dhcpcd || status=1
++systemctl --quiet restart rsyslog || status=1
+ 
+-/bin/systemctl --quiet start networking || status=1
++systemctl --quiet start networking || status=1
+ 
+ if [ -f /etc/init.d/ifplugd ]; then
+-        /bin/systemctl --quiet start ifplugd || status=1
++        systemctl --quiet start ifplugd || status=1
+ fi
+ 
+ exit $status
+diff --git a/package/helpers/restart-receiver b/package/helpers/restart-receiver
+index f3f5af0..4a0a936 100755
+--- a/package/helpers/restart-receiver
++++ b/package/helpers/restart-receiver
+@@ -1,15 +1,15 @@
+ 
+-#!/bin/sh
++#!/usr/bin/env sh
+ 
+ # Tries to reconfigure and restart the receiver
+ 
+-/bin/systemctl --quiet stop beast-splitter
+-/bin/systemctl --quiet stop dump1090-fa
++systemctl --quiet stop beast-splitter
++systemctl --quiet stop dump1090-fa
+ 
+ status=0
+ 
+-/bin/systemctl --quiet start generate-receiver-config || status=1
+-/bin/systemctl --quiet start beast-splitter || status=1
+-/bin/systemctl --quiet start dump1090-fa || status=1
++systemctl --quiet start generate-receiver-config || status=1
++systemctl --quiet start beast-splitter || status=1
++systemctl --quiet start dump1090-fa || status=1
+ 
+ exit $status
+diff --git a/package/helpers/update-piaware-config b/package/helpers/update-piaware-config
+index fd9221f..0485325 100755
+--- a/package/helpers/update-piaware-config
++++ b/package/helpers/update-piaware-config
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/usr/bin/env sh
+ 
+ # This script is intended to be run via sudo by the config package when
+ # less-privileged processes need to update a piaware config file. It is
+diff --git a/programs/piaware/faup1090.tcl b/programs/piaware/faup1090.tcl
+index 9c80bb9..fd1f51a 100644
+--- a/programs/piaware/faup1090.tcl
++++ b/programs/piaware/faup1090.tcl
+@@ -63,7 +63,7 @@ proc connect_adsb_via_faup1090 {} {
+ 	}
+ 
+ 	# path to faup1090
+-	set path [auto_execok "/usr/lib/piaware/helpers/faup1090"]
++	set path [auto_execok "faup1090"]
+ 	if {$path eq ""} {
+ 		logger "No faup1090 found at $path, 1090ES support disabled"
+ 		return
+diff --git a/programs/piaware/helpers.tcl b/programs/piaware/helpers.tcl
+index d4c7267..4b58922 100644
+--- a/programs/piaware/helpers.tcl
++++ b/programs/piaware/helpers.tcl
+@@ -59,7 +59,7 @@ proc log_bgerror {message _options} {
+ proc greetings {} {
+ 	log_locally "****************************************************"
+ 	log_locally "piaware version $::piawareVersionFull is running, process ID [pid]"
+-	log_locally "your system info is: [::fa_sudo::exec_as /bin/uname --all]"
++	log_locally "your system info is: [::fa_sudo::exec_as uname --all]"
+ }
+ 
+ #
+diff --git a/programs/piaware/helpers/run-apt-get b/programs/piaware/helpers/run-apt-get
+index 6f0ad48..98073cc 100755
+--- a/programs/piaware/helpers/run-apt-get
++++ b/programs/piaware/helpers/run-apt-get
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/usr/bin/env sh
+ 
+ # A helper script to run apt-get noninteractively with the right settings.
+ # Run as one of:
+diff --git a/programs/piaware/login.tcl b/programs/piaware/login.tcl
+index 61b625f..530232f 100644
+--- a/programs/piaware/login.tcl
++++ b/programs/piaware/login.tcl
+@@ -19,7 +19,7 @@ proc gather_login_info {_message} {
+ 	inspect_sockets_with_netstat
+ 
+ 	# construct some key-value pairs to be included.
+-	catch {set message(uname) [::fa_sudo::exec_as /bin/uname --all]}
++	catch {set message(uname) [::fa_sudo::exec_as uname --all]}
+ 
+ 	# from config.tcl
+ 	set message(piaware_version) $::piawareVersion
+diff --git a/programs/piaware/update.tcl b/programs/piaware/update.tcl
+index 0e82512..a5bcc59 100644
+--- a/programs/piaware/update.tcl
++++ b/programs/piaware/update.tcl
+@@ -175,7 +175,7 @@ proc handle_update_request {type _row} {
+ #
+ proc reboot {} {
+     logger "rebooting..."
+-	::fa_sudo::exec_as -root -- /sbin/reboot &
++	::fa_sudo::exec_as -root -- reboot &
+ }
+ 
+ #
+@@ -183,7 +183,7 @@ proc reboot {} {
+ #
+ proc halt {} {
+ 	logger "halting..."
+-	::fa_sudo::exec_as -root -- /sbin/halt &
++	::fa_sudo::exec_as -root -- halt &
+ }
+ 
+ #
+diff --git a/programs/pirehose/generate-cert.sh b/programs/pirehose/generate-cert.sh
+index 9e50e4b..08e8533 100755
+--- a/programs/pirehose/generate-cert.sh
++++ b/programs/pirehose/generate-cert.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/usr/bin/env sh
+ 
+ if [ `piaware-config -show enable-firehose` != "yes" ]
+ then

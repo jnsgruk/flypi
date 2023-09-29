@@ -1,3 +1,55 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.services.piaware;
+
+  mkConfigFile = cfg: pkgs.writeTextFile {
+    name = "piaware.conf";
+    text = ''
+      receiver-host "localhost"
+      receiver-type "other"
+      feeder-id     "${cfg.feederId}"
+    '';
+  };
+in
+{
+  options = {
+    services.piaware = {
+      enable = lib.mkEnableOption (lib.mdDoc "the Piaware client");
+
+      package = lib.mkPackageOptionMD pkgs "piaware" { };
+
+      feederId = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = lib.mdDoc "Your Flightaware feeder ID";
+      };
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    systemd.services.piaware = {
+      description = "piawarefeed";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+
+      serviceConfig = {
+        Type = "simple";
+        DynamicUser = true;
+        CacheDirectory = "piaware";
+        RuntimeDirectory = "piaware";
+        StateDirectory = "piaware";
+        Restart = "on-failure";
+        ExecStart = "${lib.getExe cfg.package} -plainlog -cachedir /var/cache/piaware -configfile ${mkConfigFile cfg}";
+      };
+    };
+  };
+}
+
+# Possible config file lines:
+
 #adept-serverhosts             "piaware.flightaware.com piaware.flightaware.com {70.42.6.156 70.42.6.232 70.42.6.224 70.42.6.228 70.42.6.198 70.42.6.225}" # using default value
 #adept-serverport              1200                           # using default value
 #allow-auto-updates            no                             # using default value
@@ -21,9 +73,7 @@
 #network-config-style          buster                         # using default value
 #priority                      <unset>                        # no value set and no default value
 #radarcape-host                <unset>                        # no value set and no default value
-receiver-host                  dump1090                       # no value set and no default value
 #receiver-port                 30005                          # using default value
-receiver-type                  other                          # using default value
 #rfkill                        no                             # using default value
 #rtlsdr-device-index           0                              # using default value
 #rtlsdr-gain                   max                            # using default value
@@ -52,3 +102,5 @@ receiver-type                  other                          # using default va
 #wireless-password             <unset>                        # no value set and no default value
 #wireless-ssid                 <unset>                        # no value set and no default value
 #wireless-type                 dhcp                           # using default value
+
+

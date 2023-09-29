@@ -1,0 +1,16 @@
+diff --git a/tcllauncher.tcl b/tcllauncher.tcl
+index 454c3e6..391c1ce 100644
+--- a/tcllauncher.tcl
++++ b/tcllauncher.tcl
+@@ -43,6 +43,11 @@ proc main {{argv ""}} {
+     #puts stderr "path '$path', prog '$prog', shortName '$shortName'"
+ 
+     if {[lindex $path end-1] == "bin"} {
++	# deal with wrapped executable
++	if {[string match .*-wrapped $shortName] == 1} {
++	    set shortName [string range $shortName 1 [string last "-wrapped" $shortName]-1]
++	}
++
+ 	# this version looks for ../lib/tcllauncher/$shortName.tcl`
+ 	#set path [eval file join [lreplace $path end-1 end-1 lib tcllauncher]]
+ 
