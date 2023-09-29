@@ -15,6 +15,7 @@ let
       raw=no
       mlat=no
       mlat-without-gps=no
+      bind-interface=0.0.0.0
     '';
   };
 in

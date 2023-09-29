@@ -63,22 +63,24 @@ Next, configure your system using the included modules:
     };
     realadsb = {
         enable = true;
-        settings = {
-            input = [{
-                type = "beast_tcp";
-                name = "dump1090";
-                host = "localhost";
-                port = 30005;
-            }];
-            output = [{
-                type = "lametric";
-                name = "lametric";
-                host = "192.168.1.23";
-                token = "deadbeef";
-                latitude = "52.352";
-                longitude = "-1.621";
-            }];
-        };
+        configLines = ''
+        {
+          "input": [{
+            "type": "beast_tcp",
+            "name": "dump1090",
+            "host": "localhost",
+            "port": 30005
+          }],
+          "output": [{
+            "type": "lametric",
+            "name": "LaMetric clock",
+            "host": "192.168.1.63",
+            "access_token": "deadbeef",
+            "latitude": "52.352",
+            "longitude": "-1.621"
+          }]
+        }
+      '';
     };
   };
 };
@@ -88,6 +90,6 @@ Next, configure your system using the included modules:
 
 By default, the following endpoints/ports are exposed:
 
-- Piaware: http://<hostname>:8080
-- Flightradar24: http://<hostname>:8754
-- Planefinder: http://<hostname>:30053
+- Piaware: http://localhost:8080
+- Flightradar24: http://localhost:8754
+- Planefinder: http://localhost:30053
