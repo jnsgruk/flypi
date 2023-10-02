@@ -24,7 +24,7 @@ pkgs.stdenv.mkDerivation rec {
     mkdir -pv $out/share/java $out/bin
     cp ${src} $out/share/java/${pname}-${version}.jar
     
-    makeWrapper ${pkgs.jre_minimal}/bin/java $out/bin/realadsb \
+    makeWrapper ${pkgs.jre}/bin/java $out/bin/realadsb \
       --add-flags "-jar $out/share/java/${pname}-${version}.jar"
     
     runHook postInstall
