@@ -56,8 +56,18 @@ in
         StateDirectory = "fr24feed";
         Restart = "on-failure";
         ExecStart = "${lib.getExe cfg.package} --config-file=${mkConfigFile cfg}";
-        StandardOutput = append:/var/log/fr24.log;
-        StandardError = "inherit";
+        StandardOutput = file:/var/log/fr24.log;
+      };
+    };
+
+    services.logrotate = {
+      enable = true;
+      settings.fr24 = {
+        files = "/var/log/fr24.log";
+        frequency = "weekly";
+        rotate = 2;
+        compress = true;
+        copytruncate = true;
       };
     };
   };

@@ -36,7 +36,17 @@ in
         Restart = "on-failure";
         ExecStart = "${lib.getExe cfg.package} ${configFile cfg}";
         StandardOutput = append:/var/log/realadsb.log;
-        StandardError = "inherit";
+      };
+    };
+
+    services.logrotate = {
+      enable = true;
+      settings.realadsb = {
+        files = "/var/log/realadsb.log";
+        frequency = "weekly";
+        rotate = 2;
+        compress = true;
+        copytruncate = true;
       };
     };
   };
