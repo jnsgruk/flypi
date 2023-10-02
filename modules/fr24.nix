@@ -15,7 +15,7 @@ let
       raw=no
       mlat=no
       mlat-without-gps=no
-      bind-interface=0.0.0.0
+      bind-interface=${cfg.bindAddress}
     '';
   };
 in
@@ -36,6 +36,12 @@ in
         type = lib.types.str;
         default = "";
         description = lib.mdDoc "Your Flightradar24 sharing key";
+      };
+
+      bindAddress = lib.mkOption {
+        type = lib.types.str;
+        default = "0.0.0.0";
+        description = lib.mdDoc "Address of the interface to bind the service to.";
       };
     };
   };
