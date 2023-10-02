@@ -45,25 +45,29 @@ in
       allowedTCPPorts = [ 8754 ];
     };
 
-    systemd.services.fr24 = {
-      description = "fr24feed";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
+    systemd = {
+      services.fr24 = {
+        description = "fr24feed";
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
 
-      serviceConfig = {
-        Type = "simple";
-        DynamicUser = true;
-        StateDirectory = "fr24feed";
-        Restart = "on-failure";
-        ExecStart = "${lib.getExe cfg.package} --config-file=${mkConfigFile cfg}";
-        StandardOutput = file:/var/log/fr24.log;
+        serviceConfig = {
+          Type = "simple";
+          DynamicUser = true;
+          StateDirectory = "fr24feed";
+          Restart = "on-failure";
+          ExecStart = "${lib.getExe cfg.package} --config-file=${mkConfigFile cfg}";
+          StandardOutput = file:/var/log/fr24/fr24.log;
+        };
       };
+
+      tmpfiles.rules = [ "d /var/log/fr24 - - - - -" ];
     };
 
     services.logrotate = {
       enable = true;
       settings.fr24 = {
-        files = "/var/log/fr24.log";
+        files = "/var/log/fr24/fr24.log";
         frequency = "weekly";
         rotate = 2;
         compress = true;

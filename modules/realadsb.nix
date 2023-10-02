@@ -25,24 +25,28 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services.realadsb = {
-      description = "realadsb";
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
+    systemd = {
+      services.realadsb = {
+        description = "realadsb";
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
 
-      serviceConfig = {
-        Type = "simple";
-        DynamicUser = true;
-        Restart = "on-failure";
-        ExecStart = "${lib.getExe cfg.package} ${configFile cfg}";
-        StandardOutput = append:/var/log/realadsb.log;
+        serviceConfig = {
+          Type = "simple";
+          DynamicUser = true;
+          Restart = "on-failure";
+          ExecStart = "${lib.getExe cfg.package} ${configFile cfg}";
+          StandardOutput = append:/var/log/realadsb/realadsb.log;
+        };
       };
+
+      tmpfiles.rules = [ "d /var/log/realadsb - - - - -" ];
     };
 
     services.logrotate = {
       enable = true;
       settings.realadsb = {
-        files = "/var/log/realadsb.log";
+        files = "/var/log/realadsb/realadsb.log";
         frequency = "weekly";
         rotate = 2;
         compress = true;
