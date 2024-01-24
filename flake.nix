@@ -2,15 +2,12 @@
   description = "flypi flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nix-formatter-pack.url = "github:Gerschtli/nix-formatter-pack";
-    nix-formatter-pack.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
   outputs =
     { self
     , nixpkgs
-    , nix-formatter-pack
     , ...
     }:
     let
@@ -75,16 +72,5 @@
         planefinder = import ./modules/planefinder.nix;
         realadsb = import ./modules/realadsb.nix;
       };
-
-      formatter = forAllSystems (system:
-        nix-formatter-pack.lib.mkFormatter {
-          pkgs = nixpkgs.legacyPackages.${system};
-          config.tools = {
-            deadnix.enable = true;
-            nixpkgs-fmt.enable = true;
-            statix.enable = true;
-          };
-        }
-      );
     };
 }
