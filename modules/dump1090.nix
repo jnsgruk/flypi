@@ -70,7 +70,7 @@ in
 
         alias.url += (
           "/dump1090-fa/data/" => "/run/dump1090-fa/",
-          "/dump1090-fa/" => "${cfg.package}/share/dump1090"
+          "/dump1090-fa/" => "${cfg.package}/share/dump1090",
           "/data/receiver.json" => "/run/dump1090-fa/receiver.json",
           "/status.json" => "/run/dump1090-fa/stats.json",
           "/data/" => "/run/dump1090-fa/",
