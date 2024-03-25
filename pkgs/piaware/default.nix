@@ -38,5 +38,6 @@ pkgs.stdenv.mkDerivation rec {
     license = lib.licenses.bsd2;
     platforms = lib.platforms.linux;
     maintainers = with lib.maintainers; [ jnsgruk ];
+    mainProgram = "piaware";
   };
 }
