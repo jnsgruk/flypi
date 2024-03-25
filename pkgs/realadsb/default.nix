@@ -36,6 +36,7 @@ pkgs.stdenv.mkDerivation rec {
     license = lib.licenses.unfree;
     sourceProvenance = with lib.sourceTypes; [ binaryBytecode ];
     maintainers = with lib.maintainers; [ jnsgruk ];
+    mainProgram = "realadsb";
   };
 
 }
