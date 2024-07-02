@@ -29,12 +29,10 @@ pkgs.stdenv.mkDerivation {
   # case that happens when the archive doesn't have a subdirectory.
   setSourceRoot = "sourceRoot=`pwd`";
 
+  nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+
   installPhase = ''
     install -Dm 0755 pfclient $out/bin/pfclient
-  '';
-
-  postFixup = ''
-    patchelf --set-interpreter ${pkgs.stdenv.cc.libc}/lib/ld-linux-x86-64.so.2 $out/bin/pfclient
   '';
 
   meta = {
