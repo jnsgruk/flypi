@@ -11,9 +11,9 @@ let
       hash = "sha256-t8Nanu0qxbW1mmSOYJKDAt8RJzmzwym0J+BtTEWHuwc=";
     };
     aarch64-linux = rec {
-      version = "5.0.161";
-      url = "http://client.planefinder.net/pfclient_${version}_armhf.tar.gz";
-      hash = "sha256-qKNuFlkcJdX1A0U6UoytlASOe6M7+KIB+I0AxQTFxZw=";
+      version = "5.1.440";
+      url = "http://client.planefinder.net/pfclient_${version}_arm64.tar.gz";
+      hash = "sha256-ozV1J3AZ0OKqUotDXAqV9v/v0xE94PqpVo6rzk4HXH8=";
     };
   };
 in
