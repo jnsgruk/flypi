@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.piaware;
 

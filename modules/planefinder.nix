@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.planefinder;
 
@@ -78,7 +76,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall { allowedTCPPorts = [ 30053 ]; };
+    networking.firewall = lib.mkIf cfg.openFirewall { allowedTCPPorts = [ 30053 ]; };
 
     systemd.services.planefinder = {
       description = "planefinder";

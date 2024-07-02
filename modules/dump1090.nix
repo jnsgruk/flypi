@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.dump1090;
 in
@@ -36,7 +34,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall { allowedTCPPorts = [ 30005 ]; };
+    networking.firewall = lib.mkIf cfg.openFirewall { allowedTCPPorts = [ 30005 ]; };
 
     hardware.rtl-sdr.enable = true;
 
@@ -55,7 +53,7 @@ in
       };
     };
 
-    services.lighttpd = mkIf cfg.ui.enable {
+    services.lighttpd = lib.mkIf cfg.ui.enable {
       enable = true;
       inherit (cfg.ui) port;
       document-root = "${cfg.package}/share/dump1090";

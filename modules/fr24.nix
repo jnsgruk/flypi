@@ -5,8 +5,6 @@
   ...
 }:
 
-with lib;
-
 let
   cfg = config.services.fr24;
 
@@ -54,7 +52,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall { allowedTCPPorts = [ 8754 ]; };
+    networking.firewall = lib.mkIf cfg.openFirewall { allowedTCPPorts = [ 8754 ]; };
 
     systemd = {
       services.fr24 = {
@@ -68,21 +66,7 @@ in
           StateDirectory = "fr24feed";
           Restart = "on-failure";
           ExecStart = "${lib.getExe cfg.package} --config-file=${mkConfigFile cfg}";
-          StandardOutput = "file:/var/log/fr24/fr24.log";
         };
-      };
-
-      tmpfiles.rules = [ "d /var/log/fr24 - - - - -" ];
-    };
-
-    services.logrotate = {
-      enable = true;
-      settings.fr24 = {
-        files = "/var/log/fr24/fr24.log";
-        frequency = "weekly";
-        rotate = 2;
-        compress = true;
-        copytruncate = true;
       };
     };
   };

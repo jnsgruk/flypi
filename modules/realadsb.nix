@@ -43,21 +43,7 @@ in
           DynamicUser = true;
           Restart = "on-failure";
           ExecStart = "${lib.getExe cfg.package} ${configFile cfg}";
-          StandardOutput = "append:/var/log/realadsb/realadsb.log";
         };
-      };
-
-      tmpfiles.rules = [ "d /var/log/realadsb - - - - -" ];
-    };
-
-    services.logrotate = {
-      enable = true;
-      settings.realadsb = {
-        files = "/var/log/realadsb/realadsb.log";
-        frequency = "weekly";
-        rotate = 2;
-        compress = true;
-        copytruncate = true;
       };
     };
   };
