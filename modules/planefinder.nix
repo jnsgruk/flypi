@@ -88,10 +88,8 @@ in
       serviceConfig = {
         Type = "simple";
         DynamicUser = true;
-        StateDirectory = "planefinder";
-        LogsDirectory = "planefinder";
         Restart = "on-failure";
-        ExecStart = "${lib.getExe cfg.package} --config_path=${mkConfigFile cfg} --log_path=/var/log/planefinder";
+        ExecStart = "${lib.getExe cfg.package} --config_path=${mkConfigFile cfg}";
       };
     };
   };
