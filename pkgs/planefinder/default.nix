@@ -1,7 +1,4 @@
-{ pkgs
-, lib
-, ...
-}:
+{ pkgs, lib, ... }:
 let
   # Versions from https://planefinder.net/coverage/client
   sources = {
@@ -21,9 +18,7 @@ pkgs.stdenv.mkDerivation {
   pname = "planefinder";
   inherit (sources.${pkgs.system}) version;
 
-  src = pkgs.fetchurl {
-    inherit (sources.${pkgs.system}) url hash;
-  };
+  src = pkgs.fetchurl { inherit (sources.${pkgs.system}) url hash; };
 
   # Work around the "unpacker appears to have produced no directories"
   # case that happens when the archive doesn't have a subdirectory.
@@ -46,4 +41,3 @@ pkgs.stdenv.mkDerivation {
   };
 
 }
-

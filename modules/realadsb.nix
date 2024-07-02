@@ -1,13 +1,20 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.realadsb;
-  configFile = cfg: pkgs.writeTextFile {
-    name = "realadsb.json";
-    text = cfg.configLines;
-  };
+  configFile =
+    cfg:
+    pkgs.writeTextFile {
+      name = "realadsb.json";
+      text = cfg.configLines;
+    };
 in
 {
   options = {
@@ -36,7 +43,7 @@ in
           DynamicUser = true;
           Restart = "on-failure";
           ExecStart = "${lib.getExe cfg.package} ${configFile cfg}";
-          StandardOutput = append:/var/log/realadsb/realadsb.log;
+          StandardOutput = "append:/var/log/realadsb/realadsb.log";
         };
       };
 

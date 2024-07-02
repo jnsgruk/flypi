@@ -1,7 +1,4 @@
-{ pkgs
-, lib
-, ...
-}:
+{ pkgs, lib, ... }:
 pkgs.stdenv.mkDerivation rec {
   pname = "realadsb";
   version = "3";
@@ -20,13 +17,13 @@ pkgs.stdenv.mkDerivation rec {
 
   installPhase = ''
     runHook preInstall
-    
+
     mkdir -pv $out/share/java $out/bin
     cp ${src} $out/share/java/${pname}-${version}.jar
-    
+
     makeWrapper ${pkgs.jre}/bin/java $out/bin/realadsb \
       --add-flags "-jar $out/share/java/${pname}-${version}.jar"
-    
+
     runHook postInstall
   '';
 
@@ -40,4 +37,3 @@ pkgs.stdenv.mkDerivation rec {
   };
 
 }
-

@@ -1,7 +1,4 @@
-{ pkgs
-, lib
-, ...
-}:
+{ pkgs, lib, ... }:
 let
   # Versions from https://www.flightradar24.com/share-your-data#linux
   version = "1.0.34-0";
@@ -21,19 +18,18 @@ pkgs.stdenv.mkDerivation rec {
   pname = "fr24";
   inherit version;
 
-  src = pkgs.fetchurl {
-    inherit (sources.${pkgs.system}) url hash;
-  };
+  src = pkgs.fetchurl { inherit (sources.${pkgs.system}) url hash; };
 
   fhsEnv = pkgs.buildFHSEnv {
     name = "${pname}-fhs-env";
     runScript = "";
-    targetPkgs = pkgs: with pkgs; [
-      dump1090
-      procps
-      nettools
-      bashInteractive
-    ];
+    targetPkgs =
+      pkgs: with pkgs; [
+        dump1090
+        procps
+        nettools
+        bashInteractive
+      ];
   };
 
   nativeBuildInputs = with pkgs; [ makeWrapper ];
@@ -59,4 +55,3 @@ pkgs.stdenv.mkDerivation rec {
   };
 
 }
-

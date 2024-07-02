@@ -1,7 +1,4 @@
-{ pkgs
-, lib
-, ...
-}:
+{ pkgs, lib, ... }:
 pkgs.stdenv.mkDerivation rec {
   pname = "piaware";
   version = "8.2";
@@ -29,7 +26,16 @@ pkgs.stdenv.mkDerivation rec {
   postInstall = ''
     wrapProgram $out/bin/piaware \
       --set TCLLIBPATH "${pkgs.tcltls}/lib ${pkgs.tcllib}/lib" \
-      --prefix PATH : "${lib.makeBinPath [pkgs.iproute2 pkgs.coreutils pkgs.systemd pkgs.tcllauncher pkgs.nettools pkgs.dump1090-fa]}"
+      --prefix PATH : "${
+        lib.makeBinPath [
+          pkgs.iproute2
+          pkgs.coreutils
+          pkgs.systemd
+          pkgs.tcllauncher
+          pkgs.nettools
+          pkgs.dump1090-fa
+        ]
+      }"
   '';
 
   meta = {

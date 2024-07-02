@@ -1,23 +1,30 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.fr24;
 
-  mkConfigFile = cfg: pkgs.writeTextFile {
-    name = "fr24feed.ini";
-    text = ''
-      fr24key=${cfg.sharingKey}
-      receiver=beast-tcp
-      host=localhost:30005
-      bs=no
-      raw=no
-      mlat=no
-      mlat-without-gps=no
-      bind-interface=${cfg.bindAddress}
-    '';
-  };
+  mkConfigFile =
+    cfg:
+    pkgs.writeTextFile {
+      name = "fr24feed.ini";
+      text = ''
+        fr24key=${cfg.sharingKey}
+        receiver=beast-tcp
+        host=localhost:30005
+        bs=no
+        raw=no
+        mlat=no
+        mlat-without-gps=no
+        bind-interface=${cfg.bindAddress}
+      '';
+    };
 in
 {
   options = {
@@ -47,9 +54,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall {
-      allowedTCPPorts = [ 8754 ];
-    };
+    networking.firewall = mkIf cfg.openFirewall { allowedTCPPorts = [ 8754 ]; };
 
     systemd = {
       services.fr24 = {
@@ -63,7 +68,7 @@ in
           StateDirectory = "fr24feed";
           Restart = "on-failure";
           ExecStart = "${lib.getExe cfg.package} --config-file=${mkConfigFile cfg}";
-          StandardOutput = file:/var/log/fr24/fr24.log;
+          StandardOutput = "file:/var/log/fr24/fr24.log";
         };
       };
 
@@ -82,5 +87,3 @@ in
     };
   };
 }
-
-

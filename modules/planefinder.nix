@@ -1,27 +1,34 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
 let
   cfg = config.services.planefinder;
 
-  mkConfigFile = cfg: pkgs.writeTextFile {
-    name = "planefinder-config.json";
-    text = ''
-      {
-        "tcp_address": "localhost",
-        "tcp_port": "30005",
-        "select_timeout": "10",
-        "data_upload_interval": "10",
-        "connection_type": "1",
-        "aircraft_timeout": "30",
-        "data_format": "1",
-        "sharecode": "${cfg.shareCode}",
-        "latitude": "${cfg.latitude}",
-        "longitude": "${cfg.longitude}"
-      }
-    '';
-  };
+  mkConfigFile =
+    cfg:
+    pkgs.writeTextFile {
+      name = "planefinder-config.json";
+      text = ''
+        {
+          "tcp_address": "localhost",
+          "tcp_port": "30005",
+          "select_timeout": "10",
+          "data_upload_interval": "10",
+          "connection_type": "1",
+          "aircraft_timeout": "30",
+          "data_format": "1",
+          "sharecode": "${cfg.shareCode}",
+          "latitude": "${cfg.latitude}",
+          "longitude": "${cfg.longitude}"
+        }
+      '';
+    };
 in
 {
   options = {
@@ -57,9 +64,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall {
-      allowedTCPPorts = [ 30053 ];
-    };
+    networking.firewall = mkIf cfg.openFirewall { allowedTCPPorts = [ 30053 ]; };
 
     systemd.services.planefinder = {
       description = "planefinder";
@@ -77,4 +82,3 @@ in
     };
   };
 }
-

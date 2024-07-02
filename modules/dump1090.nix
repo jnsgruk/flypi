@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -31,9 +36,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall {
-      allowedTCPPorts = [ 30005 ];
-    };
+    networking.firewall = mkIf cfg.openFirewall { allowedTCPPorts = [ 30005 ]; };
 
     hardware.rtl-sdr.enable = true;
 
