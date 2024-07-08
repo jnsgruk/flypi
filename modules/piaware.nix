@@ -1,18 +1,23 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.piaware;
 
-  mkConfigFile = cfg: pkgs.writeTextFile {
-    name = "piaware.conf";
-    text = ''
-      receiver-host "localhost"
-      receiver-type "other"
-      feeder-id     "${cfg.feederId}"
-    '';
-  };
+  mkConfigFile =
+    cfg:
+    pkgs.writeTextFile {
+      name = "piaware.conf";
+      text = ''
+        receiver-host "localhost"
+        receiver-type "other"
+        feeder-id     "${cfg.feederId}"
+      '';
+    };
 in
 {
   options = {
@@ -102,5 +107,3 @@ in
 #wireless-password             <unset>                        # no value set and no default value
 #wireless-ssid                 <unset>                        # no value set and no default value
 #wireless-type                 dhcp                           # using default value
-
-

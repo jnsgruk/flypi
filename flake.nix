@@ -6,10 +6,7 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , ...
-    }:
+    { self, nixpkgs, ... }:
     let
       supportedSystems = [
         "aarch64-linux"
@@ -18,10 +15,12 @@
 
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
-      pkgsForSystem = system: (import nixpkgs {
-        inherit system;
-        overlays = [ self.overlay ];
-      });
+      pkgsForSystem =
+        system:
+        (import nixpkgs {
+          inherit system;
+          overlays = [ self.overlay ];
+        });
     in
     {
       overlay = final: prev: {
@@ -54,16 +53,16 @@
         tcllauncher = final.callPackage ./pkgs/tcllauncher { };
       };
 
-      packages = forAllSystems
-        (system: {
-          inherit (pkgsForSystem system)
-            dump1090
-            fr24
-            piaware
-            planefinder
-            realadsb
-            tcllauncher;
-        });
+      packages = forAllSystems (system: {
+        inherit (pkgsForSystem system)
+          dump1090
+          fr24
+          piaware
+          planefinder
+          realadsb
+          tcllauncher
+          ;
+      });
 
       nixosModules = {
         dump1090 = import ./modules/dump1090.nix;

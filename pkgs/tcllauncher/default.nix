@@ -1,7 +1,4 @@
-{ pkgs
-, lib
-, ...
-}:
+{ pkgs, lib, ... }:
 let
   pname = "tcllauncher";
   version = "1.10";
@@ -16,13 +13,9 @@ pkgs.tcl.mkTclDerivation {
     hash = "sha256-BVrsoczKeBBoM1Q3v6EJY81QwsX6xbUqFkcBb482WH4=";
   };
 
-  nativeBuildInputs = with pkgs; [
-    autoreconfHook
-  ];
+  nativeBuildInputs = with pkgs; [ autoreconfHook ];
 
-  buildInputs = with pkgs; [
-    tclx
-  ];
+  buildInputs = with pkgs; [ tclx ];
 
   patches = [ ./wrapped.patch ];
 

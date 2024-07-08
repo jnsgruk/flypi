@@ -1,27 +1,35 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.planefinder;
 
-  mkConfigFile = cfg: pkgs.writeTextFile {
-    name = "planefinder-config.json";
-    text = ''
-      {
-        "tcp_address": "localhost",
-        "tcp_port": "30005",
-        "select_timeout": "10",
-        "data_upload_interval": "10",
-        "connection_type": "1",
-        "aircraft_timeout": "30",
-        "data_format": "1",
-        "sharecode": "${cfg.shareCode}",
-        "latitude": "${cfg.latitude}",
-        "longitude": "${cfg.longitude}"
+  mkConfigFile =
+    cfg:
+    if cfg.configFile == null then
+      pkgs.writeTextFile {
+        name = "planefinder-config.json";
+        text = ''
+          {
+            "tcp_address": "localhost",
+            "tcp_port": "30005",
+            "select_timeout": "10",
+            "data_upload_interval": "10",
+            "connection_type": "1",
+            "aircraft_timeout": "30",
+            "data_format": "1",
+            "sharecode": "${cfg.shareCode}",
+            "latitude": "${cfg.latitude}",
+            "longitude": "${cfg.longitude}"
+          }
+        '';
       }
-    '';
-  };
+    else
+      cfg.configFile;
 in
 {
   options = {
@@ -34,6 +42,17 @@ in
         type = lib.types.bool;
         default = false;
         description = lib.mdDoc "Open ports in the firewall for planefinder.";
+      };
+
+      configFile = lib.mkOption {
+        default = null;
+        description = ''
+          Path to Planefinder config file.
+
+          Setting this option will override any configuration applied by
+          other configuration options.
+        '';
+        type = lib.types.nullOr lib.types.path;
       };
 
       shareCode = lib.mkOption {
@@ -57,9 +76,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = mkIf cfg.openFirewall {
-      allowedTCPPorts = [ 30053 ];
-    };
+    networking.firewall = lib.mkIf cfg.openFirewall { allowedTCPPorts = [ 30053 ]; };
 
     systemd.services.planefinder = {
       description = "planefinder";
@@ -69,12 +86,9 @@ in
       serviceConfig = {
         Type = "simple";
         DynamicUser = true;
-        StateDirectory = "planefinder";
-        LogsDirectory = "planefinder";
         Restart = "on-failure";
-        ExecStart = "${lib.getExe cfg.package} --config_path=${mkConfigFile cfg} --log_path=/var/log/planefinder";
+        ExecStart = "${lib.getExe cfg.package} --config_path=${mkConfigFile cfg}";
       };
     };
   };
 }
-
