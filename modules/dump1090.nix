@@ -29,12 +29,25 @@ in
           default = 8080;
           description = lib.mdDoc "Port for web ui for listen on";
         };
+
+        openFirewall = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = lib.mdDoc "Open ports in the firewall dump1090 web ui.";
+        };
       };
     };
   };
 
   config = lib.mkIf cfg.enable {
-    networking.firewall = lib.mkIf cfg.openFirewall { allowedTCPPorts = [ 30005 ]; };
+    networking.firewall = lib.mkMerge [
+      (lib.mkIf cfg.openFirewall {
+        allowedTCPPorts = [ 30005 ];
+      })
+      (lib.mkIf cfg.ui.openFirewall {
+        allowedTCPPorts = [ cfg.ui.port ];
+      })
+    ];
 
     hardware.rtl-sdr.enable = true;
 
