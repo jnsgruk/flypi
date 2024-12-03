@@ -21,7 +21,7 @@ in
     services.realadsb = {
       enable = lib.mkEnableOption (lib.mdDoc "the RealADSB client");
 
-      package = lib.mkPackageOptionMD pkgs "realadsb" { };
+      package = lib.mkPackageOption pkgs "realadsb" { };
 
       configLines = lib.mkOption {
         type = types.lines;

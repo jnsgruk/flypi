@@ -36,7 +36,7 @@ in
     services.planefinder = {
       enable = lib.mkEnableOption (lib.mdDoc "the Planefinder client");
 
-      package = lib.mkPackageOptionMD pkgs "planefinder" { };
+      package = lib.mkPackageOption pkgs "planefinder" { };
 
       openFirewall = lib.mkOption {
         type = lib.types.bool;

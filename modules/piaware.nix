@@ -24,7 +24,7 @@ in
     services.piaware = {
       enable = lib.mkEnableOption (lib.mdDoc "the Piaware client");
 
-      package = lib.mkPackageOptionMD pkgs "piaware" { };
+      package = lib.mkPackageOption pkgs "piaware" { };
 
       feederId = lib.mkOption {
         type = lib.types.str;

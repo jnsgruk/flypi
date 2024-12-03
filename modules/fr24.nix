@@ -29,7 +29,7 @@ in
     services.fr24 = {
       enable = lib.mkEnableOption (lib.mdDoc "the Flightradar24 client");
 
-      package = lib.mkPackageOptionMD pkgs "fr24" { };
+      package = lib.mkPackageOption pkgs "fr24" { };
 
       openFirewall = lib.mkOption {
         type = lib.types.bool;

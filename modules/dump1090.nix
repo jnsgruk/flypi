@@ -13,7 +13,7 @@ in
     services.dump1090 = {
       enable = lib.mkEnableOption (lib.mdDoc "A simple Mode S decoder for RTLSDR devices");
 
-      package = lib.mkPackageOptionMD pkgs "dump1090-fa" { };
+      package = lib.mkPackageOption pkgs "dump1090-fa" { };
 
       openFirewall = lib.mkOption {
         type = lib.types.bool;
