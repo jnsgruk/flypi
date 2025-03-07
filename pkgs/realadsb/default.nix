@@ -5,7 +5,7 @@ pkgs.stdenv.mkDerivation rec {
 
   src = pkgs.fetchurl {
     url = "http://www.realadsb.com/dl/adsb_hub3.jar";
-    hash = "sha256-cVWruIGdYbGA1oassLu13lHsSLYFk7kmu9UXgOR1Msw=";
+    hash = "sha256-HHyolGrIan2YFsLfYIuZkMeMWeYqGCQRCSQnra2X9PI=";
     # Server returns HTTP 406 with standard user agent 🤷‍♂️
     curlOpts = "--user-agent Foobar";
   };
