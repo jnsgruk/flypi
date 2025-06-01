@@ -17,7 +17,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v17
 
       - name: Update flake lock file
-        uses: DeterminateSystems/update-flake-lock@v24
+        uses: DeterminateSystems/update-flake-lock@v25
         with:
           pr-title: "chore: update flake lock file"
           commit-msg: "chore: update flake lock file"
