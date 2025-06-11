@@ -61,7 +61,7 @@ in
         DynamicUser = true;
         Group = "plugdev";
         RuntimeDirectory = "dump1090-fa";
-        ExecStart = "${cfg.package}/bin/start-dump1090-fa --write-json /run/dump1090-fa --write-json-every 1 --quiet";
+        ExecStart = "${cfg.package}/bin/dump1090 --write-json /run/dump1090-fa --write-json-every 1 --quiet";
         Restart = "on-failure";
       };
     };

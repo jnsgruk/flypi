@@ -24,27 +24,30 @@
     in
     {
       overlay = final: prev: {
-        dump1090-fa = prev.dump1090.overrideAttrs (oldAttrs: rec {
-          buildFlags = oldAttrs.buildFlags ++ [ "faup1090" ];
+        dump1090-fa =
+          if prev ? dump1090-fa 
+          then prev.dump1090-fa  # Use the existing package
+          else prev.dump1090.overrideAttrs (oldAttrs: rec {
+            buildFlags = oldAttrs.buildFlags ++ [ "faup1090" ];
 
-          installPhase = ''
-            runHook preInstall
+            installPhase = ''
+              runHook preInstall
 
-            mkdir -p $out/bin $out/share $out/etc/default
-            cp -v dump1090 $out/bin/dump1090-fa
-            cp -v view1090 faup1090 $out/bin
-            cp -vr public_html $out/share/dump1090
+              mkdir -p $out/bin $out/share $out/etc/default
+              cp -v dump1090 $out/bin/dump1090-fa
+              cp -v view1090 faup1090 $out/bin
+              cp -vr public_html $out/share/dump1090
 
-            substituteInPlace debian/start-dump1090-fa \
-              --replace "/etc/default/dump1090-fa" "$out/etc/default/dump1090-fa" \
-              --replace "/usr/bin/dump1090-fa" "$out/bin/dump1090-fa"
+              substituteInPlace debian/start-dump1090-fa \
+                --replace "/etc/default/dump1090-fa" "$out/etc/default/dump1090-fa" \
+                --replace "/usr/bin/dump1090-fa" "$out/bin/dump1090-fa"
 
-            install -m 0755 -D debian/start-dump1090-fa $out/bin/start-dump1090-fa
-            install -m 0644 -D debian/dump1090-fa.default $out/etc/default/dump1090-fa
+              install -m 0755 -D debian/start-dump1090-fa $out/bin/dump1090
+              install -m 0644 -D debian/dump1090-fa.default $out/etc/default/dump1090-fa
 
-            runHook postInstall
-          '';
-        });
+              runHook postInstall
+            '';
+          });
 
         fr24 = final.callPackage ./pkgs/fr24 { };
         piaware = final.callPackage ./pkgs/piaware { };
