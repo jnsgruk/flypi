@@ -2,6 +2,10 @@
 
 A collection of tools for tracking planes/helicopters/UFOs/whatever with ADS-B. Packaged for NixOS.
 
+> [!WARNING]  
+> This repo is no longer maintained. Some of the tools are now upstream in NixOS,
+> and for those not represented there, this might prove a useful reference.
+
 ## Contents
 
 Currently includes:
