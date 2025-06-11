@@ -2,8 +2,8 @@ name: Flake lock updater
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 1 * *"
+  # schedule:
+  #   - cron: "0 0 1 * *"
 
 jobs:
   lock-updater:
